@@ -48,6 +48,7 @@
  - Change sprite component to default to the Sprite size if not provided
  - `Game` is now a `Component`
  - `ComponentEffect` is now a `Component`
+ - `HasGameRef` can now operate independently from `Game`
 
 ## [1.0.0-releasecandidate.13]
  - Fix camera not ending up in the correct position on long jumps
