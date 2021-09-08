@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'package:test/fake.dart';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:test/fake.dart';
+
 import 'canvas_commands/cliprect_command.dart';
 import 'canvas_commands/command.dart';
 import 'canvas_commands/line_command.dart';
