@@ -350,6 +350,12 @@ class Component {
     }
   }
 
+  /// This method sets up the `OrderedSet` instance used by this component to
+  /// handle its children,
+  /// This is set up before any lifecycle methods happen.
+  ///
+  /// You can return a specific sub-class of OrderedSet, like
+  /// `QueryableOrderedSet` for example.
   @mustCallSuper
   ComponentSet createComponentSet() {
     return ComponentSet.createDefault(this);

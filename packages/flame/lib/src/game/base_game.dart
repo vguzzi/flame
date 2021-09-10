@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:meta/meta.dart';
-import 'package:ordered_set/queryable_ordered_set.dart';
 
 import '../../components.dart';
 import '../../extensions.dart';
@@ -71,20 +70,6 @@ class BaseGame extends Game {
   BaseGame() {
     camera.gameRef = this;
     _combinedProjector = Projector.compose([camera, viewport]);
-  }
-
-  /// This method sets up the OrderedSet instance used by this game, before
-  /// any lifecycle methods happen.
-  ///
-  /// You can return a specific sub-class of OrderedSet, like
-  /// [QueryableOrderedSet] for example, that we use for Collidables.
-  @override
-  ComponentSet createComponentSet() {
-    final components = super.createComponentSet();
-    if (this is HasCollidables) {
-      components.register<Collidable>();
-    }
-    return components;
   }
 
   /// This method is called for every component before it is added to the

@@ -46,9 +46,9 @@ class TestBlock extends PositionComponent with Hitbox, Collidable {
 }
 
 void main() {
-  TestGame gameWithCollidables(List<Collidable> collidables) {
+  Future<TestGame> gameWithCollidables(List<Collidable> collidables) async {
     final game = TestGame();
-    game.addAll(collidables);
+    await game.addAll(collidables);
     game.update(0);
     expect(game.children.isNotEmpty, collidables.isNotEmpty);
     return game;
@@ -256,7 +256,8 @@ void main() {
           true,
         );
       });
-      test('Detects collision after scale', () {
+
+      test('Detects collision after scale', () async {
         final blockA = TestBlock(
           Vector2.zero(),
           Vector2.all(10),
@@ -267,7 +268,7 @@ void main() {
           Vector2.all(10),
           CollidableType.active,
         );
-        final game = gameWithCollidables([blockA, blockB]);
+        final game = await gameWithCollidables([blockA, blockB]);
         expect(blockA.collidedWith(blockB), false);
         expect(blockB.collidedWith(blockA), false);
         expect(blockA.collisions.length, 0);
@@ -279,17 +280,50 @@ void main() {
         expect(blockA.collisions.length, 1);
         expect(blockB.collisions.length, 1);
       });
-      test('TestPoint detects point after scale', () {
+
+      test('TestPoint detects point after scale', () async {
         final blockA = TestBlock(
           Vector2.zero(),
           Vector2.all(10),
           CollidableType.active,
         );
-        final game = gameWithCollidables([blockA]);
+        final game = await gameWithCollidables([blockA]);
         expect(blockA.containsPoint(Vector2.all(11)), false);
         blockA.scale = Vector2.all(2.0);
         game.update(0);
         expect(blockA.containsPoint(Vector2.all(11)), true);
+      });
+
+      test('Detects collision on child components', () async {
+        final blockA = TestBlock(
+          Vector2.zero(),
+          Vector2.all(10),
+          CollidableType.active,
+        );
+        final innerBlockA = TestBlock(
+          blockA.size / 4,
+          blockA.size / 2,
+          CollidableType.active,
+        );
+        blockA.add(innerBlockA);
+
+        final blockB = TestBlock(
+          Vector2.all(5),
+          Vector2.all(10),
+          CollidableType.active,
+        );
+        final innerBlockB = TestBlock(
+          blockA.size / 4,
+          blockA.size / 2,
+          CollidableType.active,
+        );
+        blockB.add(innerBlockB);
+
+        await gameWithCollidables([blockA, blockB]);
+        expect(blockA.collisions, <Collidable>[blockB, innerBlockB]);
+        expect(blockB.collisions, <Collidable>[blockA, innerBlockA]);
+        expect(innerBlockA.collisions, <Collidable>[blockB, innerBlockB]);
+        expect(innerBlockB.collisions, <Collidable>[blockA, innerBlockA]);
       });
     },
   );
